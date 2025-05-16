@@ -4,6 +4,24 @@
 #define PUEBLOS 100
 #define BEBIDAS 8
 
+const char* opcionesBebidas[BEBIDAS] = {
+    "Vino",
+    "Refresco",
+    "Cerveza",
+    "Agua",
+    "Tequila",
+    "Jugo",
+    "Whisky",
+    "Ron"
+};
+
+void mostrarMenuBebidas() {
+    printf("\nElige la opción de bebida:\n");
+    for(int i = 0; i < BEBIDAS; i++) {
+        printf("%d. %s\n", i, opcionesBebidas[i]);
+    }
+}
+
 void inicializarMatriz(int matriz[PUEBLOS][BEBIDAS]) {
     for(int i = 0; i < PUEBLOS; i++) {
         for(int j = 0; j < BEBIDAS; j++) {
@@ -17,105 +35,31 @@ void llenarDatos(int matriz[PUEBLOS][BEBIDAS]) {
     for(int i = 0; i < PUEBLOS; i++) {
         int bebida;
         printf("\nPueblo %d:\n", i);
+        mostrarMenuBebidas();
         printf("Ingrese tipo de bebida (-1 para terminar): ");
         scanf("%d", &bebida);
         
         while(bebida != -1) {
             if(bebida < 0 || bebida >= BEBIDAS) {
-                printf("Error: Bebida invalida.\n");
+                printf("Error: Bebida inválida.\n");
             } else {
                 int litros;
                 printf("Litros consumidos: ");
                 scanf("%d", &litros);
                 matriz[i][bebida] += litros;
             }
+            mostrarMenuBebidas();
             printf("Ingrese otra bebida (-1 para terminar): ");
             scanf("%d", &bebida);
         }
     }
 }
 
-int bebidaMasConsumida(int matriz[PUEBLOS][BEBIDAS], int *maxLitros) {
-    int totales[BEBIDAS] = {0};
-    
-    for(int j = 0; j < BEBIDAS; j++) {
-        for(int i = 0; i < PUEBLOS; i++) {
-            totales[j] += matriz[i][j];
-        }
-    }
-    
-    int maxIndex = 0;
-    *maxLitros = totales[0];
-    
-    for(int j = 1; j < BEBIDAS; j++) {
-        if(totales[j] > *maxLitros) {
-            *maxLitros = totales[j];
-            maxIndex = j;
-        }
-    }
-    return maxIndex;
-}
-
-int bebidaMasConsumidaFiltrada(int matriz[PUEBLOS][BEBIDAS], int *maxLitros) {
-    int totales[BEBIDAS] = {0};
-    
-    for(int j = 0; j < BEBIDAS; j++) {
-        if(j == 1 || j == 6) continue; // Excluir bebidas 1 y 6
-        for(int i = 0; i < PUEBLOS; i++) {
-            totales[j] += matriz[i][j];
-        }
-    }
-    
-    int maxIndex = 0;
-    *maxLitros = totales[0];
-    
-    for(int j = 1; j < BEBIDAS; j++) {
-        if(totales[j] > *maxLitros) {
-            *maxLitros = totales[j];
-            maxIndex = j;
-        }
-    }
-    return maxIndex;
-}
-
-int puebloMasAlcoholicos(int matriz[PUEBLOS][BEBIDAS], int *maxLitros) {
-    int totales[PUEBLOS] = {0};
-    
-    for(int i = 0; i < PUEBLOS; i++) {
-        for(int j = 0; j < BEBIDAS; j++) {
-            if(j != 1 && j != 6) { // Solo bebidas alcohólicas
-                totales[i] += matriz[i][j];
-            }
-        }
-    }
-    
-    int maxIndex = 0;
-    *maxLitros = totales[0];
-    
-    for(int i = 1; i < PUEBLOS; i++) {
-        if(totales[i] > *maxLitros) {
-            *maxLitros = totales[i];
-            maxIndex = i;
-        }
-    }
-    return maxIndex;
-}
-
 int main() {
     int consumo[PUEBLOS][BEBIDAS];
-    int maxLitros, bebida, pueblo;
-    
+
     inicializarMatriz(consumo);
     llenarDatos(consumo);
-    
-    bebida = bebidaMasConsumida(consumo, &maxLitros);
-    printf("Bebida mas consumida: %d con %d litros.\n", bebida, maxLitros);
-    
-    bebida = bebidaMasConsumidaFiltrada(consumo, &maxLitros);
-    printf("Bebida mas consumida (filtrada): %d con %d litros.\n", bebida, maxLitros);
-    
-    pueblo = puebloMasAlcoholicos(consumo, &maxLitros);
-    printf("Pueblo %d consume mas alcohol: %d litros.\n", pueblo, maxLitros);
-    
+
     return 0;
 }
